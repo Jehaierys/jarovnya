@@ -10,7 +10,7 @@ import java.util.Optional;
 public class TransService {
     private final TransRepo transRepo;
 
-    public Optional<Transaction> getTransaction(Long id) {
-        return transRepo.getReferrenceById(id);
+    public Transaction getTransaction(Long id) {
+        return transRepo.getReferenceById(id);
     }
 }
