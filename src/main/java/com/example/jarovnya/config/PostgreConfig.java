@@ -6,8 +6,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
+
 @Configuration
-public class DataConfig {
+public class PostgreConfig {
 
     @Bean
     public DataSource dataSource() {

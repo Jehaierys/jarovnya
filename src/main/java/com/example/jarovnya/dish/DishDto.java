@@ -10,8 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DishDto {
+    private long id;
     private String name;
     private String kind;
+    private byte[] bytes;
+    private String extension;
     private String description;
     private int price;
 }

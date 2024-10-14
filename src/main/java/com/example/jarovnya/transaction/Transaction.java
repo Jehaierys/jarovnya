@@ -17,10 +17,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trans_seq_gen")
+    @SequenceGenerator(name = "trans_seq_gen", sequenceName = "trans_seq", allocationSize = 5)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "dish_id")
-    private Dish dish;
+    private Dish[] dishes;
     private LocalDate date;
 }
