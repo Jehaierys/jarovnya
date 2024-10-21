@@ -14,4 +14,8 @@ public class MvcController {
     public String catalog() {
         return "catalog";
     }
+    @GetMapping("/form")
+    public String form() {
+        return "form";
+    }
 }
