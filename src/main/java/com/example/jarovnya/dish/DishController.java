@@ -1,6 +1,5 @@
 package com.example.jarovnya.dish;
 
-import jakarta.transaction.Status;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -47,5 +47,10 @@ public class DishController {
         }
         dishService.add(newDish);
         return null;
+    }
+    //@PreAuthorized(hasRole("ROLE_ADMIN"))
+    @PatchMapping("/admin/disable")
+    public void disableDish(@RequestParam long id) {
+        dishService.disable(id);
     }
 }

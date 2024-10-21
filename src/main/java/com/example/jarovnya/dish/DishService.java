@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,12 +36,8 @@ public class DishService {
         return dishes;
     }
 
-    public void save(Dish dish) {
-        dishRepo.save(dish);
-    }
-
     public void disable(Long id) {
-        dishRepo.deactivateDishById(id);
+        dishRepo.disable(id);
     }
 
     public List<Dish> getAbsolutelyAllDishes() {
@@ -50,13 +45,14 @@ public class DishService {
     }
 
     public void add(NewDish dish) {
-
+        final String extension = getFileExtension(dish.img().getOriginalFilename());
+        logger.info("Img extension: {}", extension);
         Dish newDish = Dish.builder()
                 .name(dish.name())
                 .kind(dish.kind())
                 .description(dish.description())
                 .price(dish.price())
-                .extension(getFileExtension(dish.img().getOriginalFilename()))
+                .extension(extension)
                 .isActual(false)
                 .build();
 

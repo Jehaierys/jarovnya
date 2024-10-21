@@ -1,4 +1,4 @@
-package com.example.jarovnya.config;
+package com.example.jarovnya.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
