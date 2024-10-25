@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/styles/form.css">
   </head>
   <body>
-    <form action="/your-action-url-here" method="post" enctype="multipart/form-data">
+    <form enctype="multipart/form-data" method="post">
 
       <h2 style="text-align: center">Add a New Dish</h2>
 
@@ -27,7 +27,50 @@
       <label for="img">Image:</label>
       <input type="file" id="img" name="img" accept=".png, .jpg, .jpeg" required>
 
-      <button type="submit">Add Dish</button>
+      <button onclick="validateAndSend()">Create</button>
     </form>
+  <script>
+    async function validateAndSend() {
+    const name = document.getElementById('name').value;
+    const kind = document.getElementById('kind').value;
+    const description = document.getElementById('description').value;
+    const price = document.getElementById('price').value;
+    const img = document.getElementById('img').files[0];
+
+    if (!name || !kind || !description || !price || !img) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    const form = document.getElementsByTagName('form')[0];
+
+    const newDish = new FormData(form);
+      //newDish.append('name', name);
+      //newDish.append('kind', kind);
+      //newDish.append('description', description);
+      //newDish.append('price', price);
+      //newDish.append('img', img);
+
+    fetch('http://localhost:8080/admin/new-dish', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-zdata'
+      },
+      body: newDish
+    })
+            .then(response => {
+              if (response.ok) {
+                alert('Dish created successfully!');
+                // Optionally reset the form or redirect
+              } else {
+                alert('Error creating dish.');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred.');
+            });
+  }
+
+  </script>
   </body>
 </html>

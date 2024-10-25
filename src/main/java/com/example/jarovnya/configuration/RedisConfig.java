@@ -32,8 +32,8 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
     @Bean
-    public RedisTemplate<String, Object> redisTemplateForBytes() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+    public RedisTemplate<String, byte[]> redisTemplateForBytes() {
+        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactoryFroBytes());
         return template;
     }
