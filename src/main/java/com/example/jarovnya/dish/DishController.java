@@ -1,6 +1,5 @@
 package com.example.jarovnya.dish;
 
-import jakarta.transaction.Status;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 public class DishController {
@@ -21,28 +21,40 @@ public class DishController {
     private static final Logger logger = LoggerFactory.getLogger(DishController.class);
 
     @GetMapping("/popular")
-    public List<Dish> getCarouselDishes() {
+    public Dish[] getCarouselDishes() { // does not work
         return dishService.getCarouselDishes();
     }
+
     @GetMapping("/menu")
     public List<Dish> menu() {
         return dishService.getAllActualDishes();
     }
+
     //@PreAuthorized(hasRole("ROLE_ADMIN"))
-    @PatchMapping("admin/delete")
-    public ResponseEntity<?> disableDish(@RequestParam Long id) {
-        dishService.disable(id);
+    @PatchMapping("/admin/disable-dish")
+    public ResponseEntity<?> disableDish(@RequestParam String name) {
+        dishService.disableByName(name);
         return ResponseEntity.ok().build();
     }
+
     //@PreAuthorized(hasRole("ROLE_ADMIN"))
-    @GetMapping("/admin/dishes")
+    @PatchMapping("/admin/enable-dish")
+    public ResponseEntity<?> enableDish(@RequestParam String name) {
+        dishService.enable(name);
+        return ResponseEntity.ok().build();
+    }
+
+    //@PreAuthorized(hasRole("ROLE_ADMIN"))
+    @GetMapping("/admin/all-dishes")
     public List<Dish> getAllDishes() {
         return dishService.getAbsolutelyAllDishes();
     }
+
     //@PreAuthorized(hasRole("ROLE_ADMIN"))
-    @PostMapping("/new-dish")
+    @PostMapping("/admin/new-dish")
     public ResponseEntity<?> addNewDish(@RequestBody NewDish newDish) {
-        if (dishService.existsByName(newDish.name())) {
+        logger.info("new dish tried to create");
+        if (dishService.existsByName(newDish.getName())) {
             return new ResponseEntity<>(newDish, HttpStatus.CONFLICT); // dish with such name already exists
         }
         dishService.add(newDish);

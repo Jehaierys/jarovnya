@@ -11,60 +11,46 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class DishService {
     private final DishRepo dishRepo;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, byte[]> redisTemplate;
 
     private static final Logger logger = LoggerFactory.getLogger(DishService.class);
 
-    public List<Dish> getAllActualDishes() {
-        ArrayList<Dish> dishes = new ArrayList<>();
-        for (long i = 0L; i <10; ++i) {
-            dishes.add(dishRepo.getReferenceById(i)); //(Long)(Math.random() * i)
+    public List<Dish> getAllActualDishes() { return dishRepo.getAllActualDishes(); }
+
+    public Dish[] getCarouselDishes() {
+        Dish[] dishes = new Dish[5];
+        for (long i = 1L; i < 5; ++i) {
+            dishes[(int)(i - 1)] = dishRepo.getReferenceById(i);
         }
         return dishes;
     }
 
-    public List<Dish> getCarouselDishes() {
-        ArrayList<Dish> dishes = new ArrayList<>();
-        for (long i = 0L; i < 5; ++i) {
-            dishes.add(dishRepo.getReferenceById(i)); //(Long)(Math.random() * i)
-        }
-        return dishes;
-    }
+    public void disableByName(String name) { dishRepo.disableByName(name); }
 
-    public void save(Dish dish) {
-        dishRepo.save(dish);
-    }
-
-    public void disable(Long id) {
-        dishRepo.deactivateDishById(id);
-    }
-
-    public List<Dish> getAbsolutelyAllDishes() {
-        return dishRepo.findAll();
-    }
+    public List<Dish> getAbsolutelyAllDishes() { return dishRepo.findAll(); }
 
     public void add(NewDish dish) {
-
+        final String extension = getFileExtension(dish.getImg().getOriginalFilename());
+        logger.info("Img extension: {}", extension);
         Dish newDish = Dish.builder()
-                .name(dish.name())
-                .kind(dish.kind())
-                .description(dish.description())
-                .price(dish.price())
-                .extension(getFileExtension(dish.img().getOriginalFilename()))
+                .name(dish.getName())
+                .kind(dish.getKind())
+                .description(dish.getDescription())
+                .price(dish.getPrice())
+                .extension(extension)
                 .isActual(false)
                 .build();
 
         dishRepo.save(newDish);
 
         try {
-            byte[] imageBytes = dish.img().getBytes();
-            redisTemplate.opsForValue().set(dish.name(), imageBytes);
+            byte[] imageBytes = dish.getImg().getBytes();
+            redisTemplate.opsForValue().set(dish.getName(), imageBytes);
         } catch (IOException e) {
             logger.error("Error occurred trying to get image bytes", e);
         }
@@ -82,7 +68,8 @@ public class DishService {
         logger.warn("getFileExtension returns null");
         return null;
     }
-    public boolean existsByName(String name) {
-        return dishRepo.existsByName(name);
-    }
+
+    public boolean existsByName(String name) { return dishRepo.existsByName(name); }
+
+    public void enable(String name) { dishRepo.enableByName(name); }
 }

@@ -1,4 +1,4 @@
-package com.example.jarovnya.config;
+package com.example.jarovnya.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +32,8 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
     @Bean
-    public RedisTemplate<String, Object> redisTemplateForBytes() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+    public RedisTemplate<String, byte[]> redisTemplateForBytes() {
+        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactoryFroBytes());
         return template;
     }

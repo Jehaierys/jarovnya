@@ -8,17 +8,22 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 @Repository
 public interface DishRepo extends JpaRepository<Dish, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Dish d SET d.isActual = false WHERE d.id = :id")
-    void deactivateDishById(long id);
+    @Query("UPDATE Dish d SET d.isActual = false WHERE d.name = :name")
+    void disableByName(String name);
 
-    @Query("UPDATE Dish d SET d.isActual = false WHERE d.id = :id")
-    void putInStopList(long id);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Dish d SET d.isActual = true WHERE d.name = :name")
+    void enableByName(String name);
 
+    @Transactional
+    @Modifying
     @Query("SELECT d FROM Dish d WHERE d.isActual = true")
     List<Dish> getAllActualDishes();
 
